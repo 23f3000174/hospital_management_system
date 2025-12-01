@@ -21,7 +21,6 @@ class Register(Resource):
         )
         new_user.set_password(data['password'])
         
-
         patient_role = Role.query.filter_by(name='Patient').first()
         if patient_role:
             new_user.roles.append(patient_role)
@@ -46,7 +45,8 @@ class Login(Resource):
         if user and user.check_password(data.get('password')):
             role = user.roles[0].name if user.roles else 'Patient'
             
-            access_token = create_access_token(identity=user.id, additional_claims={'role': role})
+            access_token = create_access_token(identity=str(user.id), additional_claims={'role': role})
+            
             return {
                 'message': 'Login Successful',
                 'access_token': access_token,

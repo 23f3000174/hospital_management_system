@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from models.models import db , User , Role
+from models.models import db, User, Role
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
@@ -8,23 +8,22 @@ def create_app():
     app = Flask(__name__)
 
     app.config['JWT_SECRET_KEY'] = "secret_key"
-    jwt = JWTManager(app)
-
-    CORS(app)
-
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 86400
+    app.config["JWT_TOKEN_LOCATION"] = ["headers"]
+    app.config["JWT_HEADER_NAME"] = "Authorization"
+    app.config["JWT_HEADER_TYPE"] = "Bearer"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hms.db"
     app.config['SECRET_KEY'] = 'phull_sequrity'
+    app.config['PERMANENT_SESSION_LIFETIME'] = 86400
 
+    CORS(app)
     db.init_app(app)
-    
-    from routes.routes import api, cache
-    from routes.Department_route import api, create_initial_departments
+    jwt = JWTManager(app)
 
-    api.init_app(app)
-
-    app.config['CACHE_TYPE'] = 'RedisCache'
-    app.config['CACHE_REDIS_URL'] = 'redis://localhost:6379/0'
-    cache.init_app(app)
+    from routes import create_initial_departments, auth_bp, admin_bp, public_bp
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(admin_bp)
+    app.register_blueprint(public_bp)
 
     with app.app_context():
         db.create_all()
@@ -34,7 +33,6 @@ def create_app():
     return app
 
 def create_initial_data():
-    
     if not Role.query.filter_by(name='Admin').first():
         db.session.add(Role(name='Admin'))
     if not Role.query.filter_by(name='Doctor').first():
@@ -44,14 +42,16 @@ def create_initial_data():
     db.session.commit()
 
     if not User.query.filter_by(email='admin@admin.com').first():
-        admin_role= Role.query.filter_by(name='Admin').first()
+        admin_role = Role.query.filter_by(name='Admin').first()
         if admin_role:
-            admin_user = User(full_name='Admin User',
-                              email='admin@admin.com',
-                              password_hash='admin@123',
-                              mobile_no='9999999999',
-                              flag='ADMIN',
-                              role=[admin_role] )
+            admin_user = User(
+                full_name='Admin User',
+                email='admin@admin.com',
+                mobile_no='9999999999',
+                flag='active'
+            )
+            admin_user.set_password('admin@admin.com')
+            admin_user.roles.append(admin_role)
             db.session.add(admin_user)
             db.session.commit()
 
