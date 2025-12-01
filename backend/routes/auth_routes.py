@@ -44,7 +44,6 @@ class Login(Resource):
 
         if user and user.check_password(data.get('password')):
             role = user.roles[0].name if user.roles else 'Patient'
-            
             access_token = create_access_token(identity=str(user.id), additional_claims={'role': role})
             
             return {

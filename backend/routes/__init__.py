@@ -1,11 +1,18 @@
 from flask import Blueprint
 from flask_restful import Api
+from flask_cors import CORS
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 admin_bp = Blueprint('admin', __name__, url_prefix='/api/admin')
 doctor_bp = Blueprint('doctor', __name__, url_prefix='/api/doctor')
 patient_bp = Blueprint('patient', __name__, url_prefix='/api/patient')
 public_bp = Blueprint('public', __name__, url_prefix='/api/public')
+
+CORS(auth_bp)
+CORS(admin_bp)
+CORS(doctor_bp)
+CORS(patient_bp)
+CORS(public_bp)
 
 auth_api = Api(auth_bp)
 admin_api = Api(admin_bp)
@@ -16,17 +23,24 @@ public_api = Api(public_bp)
 from .auth_routes import Register, Login
 from .admin_routes import AdminDashboard, ManageDepartment, ManageDoctor, ManagePatient
 from .public_routes import DepartmentList
+from .doctor_routes import DoctorDashboard, ManageAvailability, ManageAppointment, AddTreatment, PatientHistory
+
 
 auth_api.add_resource(Login, '/login')
 auth_api.add_resource(Register, '/register')
 
-admin_api.add_resource(AdminDashboard, '/dashboard')
+public_api.add_resource(DepartmentList, '/departments')
 
+admin_api.add_resource(AdminDashboard, '/dashboard')
 admin_api.add_resource(ManageDoctor, '/doctor', '/doctor/<int:doctor_id>')
 admin_api.add_resource(ManageDepartment, '/department', '/department/<int:department_id>')
 admin_api.add_resource(ManagePatient, '/patient', '/patient/<int:patient_id>')
 
-public_api.add_resource(DepartmentList, '/departments')
+doctor_api.add_resource(DoctorDashboard, '/dashboard')
+doctor_api.add_resource(ManageAvailability, '/availability', '/availability/<int:slot_id>')
+doctor_api.add_resource(ManageAppointment, '/appointment/<int:appointment_id>')
+doctor_api.add_resource(AddTreatment, '/treatment/<int:appointment_id>')
+doctor_api.add_resource(PatientHistory, '/patient-history/<int:patient_id>')
 
 from models.models import db, Department
 

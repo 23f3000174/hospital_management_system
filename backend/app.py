@@ -16,14 +16,18 @@ def create_app():
     app.config['SECRET_KEY'] = 'phull_sequrity'
     app.config['PERMANENT_SESSION_LIFETIME'] = 86400
 
-    CORS(app)
+    CORS(app, resources={r"/*": {"origins": "*"}}, 
+         allow_headers=["Content-Type", "Authorization"],
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+
     db.init_app(app)
     jwt = JWTManager(app)
 
-    from routes import create_initial_departments, auth_bp, admin_bp, public_bp
+    from routes import create_initial_departments, auth_bp, admin_bp, public_bp, doctor_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(public_bp)
+    app.register_blueprint(doctor_bp)
 
     with app.app_context():
         db.create_all()

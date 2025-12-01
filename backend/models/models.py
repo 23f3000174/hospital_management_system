@@ -11,6 +11,7 @@ class User(db.Model):
     mobile_no = db.Column(db.String(10), nullable=False)
     flag = db.Column(db.String(10), nullable=False, default='active')
 
+    # Relationships
     roles = db.relationship('Role', secondary='user_role', back_populates='users')
     doctor_profile = db.relationship('Doctor', back_populates='user', uselist=False)
     patient_profile = db.relationship('Patient', back_populates='user', uselist=False)
