@@ -11,6 +11,9 @@ import ManagePatients from '../views/admin/ManagePatients.vue'
 import DoctorDashboard from '../views/doctor/DoctorDashboard.vue'
 import ManageAvailability from '../views/doctor/ManageAvailability.vue'
 import PatientHistory from '../views/doctor/PatientHistory.vue'
+import PatientDashboard from '../views/patient/PatientDashboard.vue'
+import SearchDoctors from '../views/patient/SearchDoctors.vue'
+import MyAppointments from '../views/patient/MyAppointments.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,7 +29,10 @@ const router = createRouter({
     { path: '/admin/patients', name: 'manage-patients', component: ManagePatients, meta: { requiresAuth: true, role: 'Admin' } },
     { path: '/doctor/dashboard', name: 'doctor-dashboard', component: DoctorDashboard, meta: { requiresAuth: true, role: 'Doctor' } },
     { path: '/doctor/availability', name: 'manage-availability', component: ManageAvailability, meta: { requiresAuth: true, role: 'Doctor' } },
-    { path: '/doctor/patient/:id/history', name: 'patient-history', component: PatientHistory, meta: { requiresAuth: true, role: 'Doctor' } }
+    { path: '/doctor/patient/:id/history', name: 'patient-history', component: PatientHistory, meta: { requiresAuth: true, role: 'Doctor' } },
+    { path: '/patient/dashboard', component: PatientDashboard, meta: { requiresAuth: true, role: 'Patient' } },
+    { path: '/patient/search', component: SearchDoctors, meta: { requiresAuth: true, role: 'Patient' } },
+    { path: '/patient/appointments', component: MyAppointments, meta: { requiresAuth: true, role: 'Patient' } }
   ]
 })
 

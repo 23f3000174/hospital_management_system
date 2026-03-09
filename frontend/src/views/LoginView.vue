@@ -66,7 +66,7 @@ const handleLogin = async () => {
     localStorage.setItem('access_token', token);
     localStorage.setItem('user_role', response.data.role);
     localStorage.setItem('user_id', response.data.user_id);
-
+    localStorage.setItem('user_name', response.data.full_name);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
     alert("Login Successful!");
@@ -76,7 +76,7 @@ const handleLogin = async () => {
     } else if (response.data.role === 'Doctor') {
       router.push('/doctor/dashboard'); 
     } else {
-      router.push('/');
+      router.push('/patient/dashboard');
     }
 
   } catch (error) {

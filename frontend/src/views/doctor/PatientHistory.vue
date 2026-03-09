@@ -41,19 +41,3 @@ onMounted(async () => {
   } catch (e) { console.error(e); }
 });
 </script>
-```
-
-#### 6. Update `frontend/src/router/index.js`
-Add the new routes.
-
-```javascript
-// ... existing imports ...
-import DoctorDashboard from '../views/doctor/DoctorDashboard.vue'
-import ManageAvailability from '../views/doctor/ManageAvailability.vue'
-import PatientHistory from '../views/doctor/PatientHistory.vue'
-
-// ... inside routes array ...
-    // --- Doctor Routes ---
-    { path: '/doctor/dashboard', component: DoctorDashboard, meta: { requiresAuth: true, role: 'Doctor' } },
-    { path: '/doctor/availability', component: ManageAvailability, meta: { requiresAuth: true, role: 'Doctor' } },
-    { path: '/doctor/patient/:id/history', component: PatientHistory, meta: { requiresAuth: true, role: 'Doctor' } },

@@ -28,7 +28,9 @@
 import Navbar from '../components/Navbar.vue';
 import api from '../services/api';
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const departments = ref([]);
 const loading = ref(true);
 const errorMessage = ref('');
@@ -36,6 +38,14 @@ const errorMessage = ref('');
 const getDesc = (descData) => (!descData ? 'No description.' : (typeof descData === 'string' ? descData : descData.description || 'No description.'));
 const getIssues = (descData) => (!descData ? [] : (Array.isArray(descData.issues_covered) ? descData.issues_covered : []));
 
+const handleBookClick = () => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    router.push('/patient/search');
+  } else {
+    router.push('/login'); 
+  }
+};
 onMounted(async () => {
   try {
     const response = await api.get('/public/departments');

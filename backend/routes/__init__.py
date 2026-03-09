@@ -24,7 +24,7 @@ from .auth_routes import Register, Login
 from .admin_routes import AdminDashboard, ManageDepartment, ManageDoctor, ManagePatient
 from .public_routes import DepartmentList
 from .doctor_routes import DoctorDashboard, ManageAvailability, ManageAppointment, AddTreatment, PatientHistory
-
+from .patient_routes import SearchDoctors, GetDoctorAvailability, BookAppointment, PatientAppointments, CancelAppointment, PatientProfile
 
 auth_api.add_resource(Login, '/login')
 auth_api.add_resource(Register, '/register')
@@ -42,8 +42,14 @@ doctor_api.add_resource(ManageAppointment, '/appointment/<int:appointment_id>')
 doctor_api.add_resource(AddTreatment, '/treatment/<int:appointment_id>')
 doctor_api.add_resource(PatientHistory, '/patient-history/<int:patient_id>')
 
-from models.models import db, Department
+patient_api.add_resource(SearchDoctors, '/search')
+patient_api.add_resource(GetDoctorAvailability, '/availability/<int:doctor_id>')
+patient_api.add_resource(BookAppointment, '/book')
+patient_api.add_resource(PatientAppointments, '/my-appointments')
+patient_api.add_resource(CancelAppointment, '/appointment/<int:appointment_id>/cancel')
+patient_api.add_resource(PatientProfile, '/profile')
 
+from models.models import db, Department
 def create_initial_departments():
     departments_data = [
         {

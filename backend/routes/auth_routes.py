@@ -6,7 +6,6 @@ from models.models import db, User, Role, Patient
 class Register(Resource):
     def post(self):
         data = request.get_json()
-        
         required_fields = ['email', 'password', 'full_name', 'mobile_no', 'age', 'gender']
         if not all(i in data for i in required_fields):
             return {'message': 'Missing fields'}, 400
@@ -14,27 +13,18 @@ class Register(Resource):
         if User.query.filter_by(email=data['email']).first():
             return {'message': 'Email already exists'}, 409
 
-        new_user = User(
-            full_name=data['full_name'],
-            email=data['email'],
-            mobile_no=data['mobile_no']
-        )
+        new_user = User(full_name=data['full_name'], email=data['email'], mobile_no=data['mobile_no'])
         new_user.set_password(data['password'])
         
         patient_role = Role.query.filter_by(name='Patient').first()
-        if patient_role:
-            new_user.roles.append(patient_role)
+        if patient_role: new_user.roles.append(patient_role)
 
-        new_patient = Patient(
-            age=data['age'], 
-            gender=data['gender']
-        )
+        new_patient = Patient(age=data['age'], gender=data['gender'])
         new_user.patient_profile = new_patient
 
         db.session.add(new_user)
         db.session.add(new_patient)
         db.session.commit()
-
         return {'message': 'Patient registered successfully'}, 201
 
 class Login(Resource):
@@ -50,7 +40,8 @@ class Login(Resource):
                 'message': 'Login Successful',
                 'access_token': access_token,
                 'role': role,
-                'user_id': user.id
+                'user_id': user.id,
+                'full_name': user.full_name  # <--- ADDED THIS LINE
             }, 200
 
         return {'message': 'Invalid credentials'}, 401

@@ -23,11 +23,12 @@ def create_app():
     db.init_app(app)
     jwt = JWTManager(app)
 
-    from routes import create_initial_departments, auth_bp, admin_bp, public_bp, doctor_bp
+    from routes import create_initial_departments, auth_bp, admin_bp, public_bp, doctor_bp, patient_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(public_bp)
     app.register_blueprint(doctor_bp)
+    app.register_blueprint(patient_bp)
 
     with app.app_context():
         db.create_all()

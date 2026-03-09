@@ -39,8 +39,10 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const token = localStorage.getItem('access_token');
 const role = localStorage.getItem('user_role');
+const name = localStorage.getItem('user_name');
 
 const isLoggedIn = computed(() => !!token);
+const userName = computed(() => name || 'User');
 
 const dashboardLink = computed(() => {
   if (role === 'Admin') return '/admin/dashboard';
