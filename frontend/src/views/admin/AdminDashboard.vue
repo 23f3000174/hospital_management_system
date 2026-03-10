@@ -34,21 +34,27 @@
 
       <h4 class="mb-3 border-bottom pb-2">Quick Actions</h4>
       <div class="row g-3">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <router-link to="/admin/doctors" class="btn btn-outline-primary w-100 p-4 fw-bold">
             Manage Doctors
           </router-link>
         </div>
         
-        <div class="col-md-4">
+        <div class="col-md-3">
           <router-link to="/admin/departments" class="btn btn-outline-dark w-100 p-4 fw-bold">
             Manage Departments
           </router-link>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
           <router-link to="/admin/patients" class="btn btn-outline-success w-100 p-4 fw-bold">
             Manage Patients
+          </router-link>
+        </div>
+
+        <div class="col-md-3">
+          <router-link to="/admin/appointments" class="btn btn-outline-info w-100 p-4 fw-bold">
+            View Appointments
           </router-link>
         </div>
       </div>

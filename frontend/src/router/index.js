@@ -8,6 +8,8 @@ import AddDoctor from '../views/admin/AddDoctor.vue'
 import ManageDepartments from '../views/admin/ManageDepartments.vue'
 import AddDepartment from '../views/admin/AddDepartment.vue'
 import ManagePatients from '../views/admin/ManagePatients.vue'
+import AdminAppointments from '../views/admin/AdminAppointments.vue'
+import AdminPatientHistory from '../views/admin/AdminPatientHistory.vue'
 import DoctorDashboard from '../views/doctor/DoctorDashboard.vue'
 import ManageAvailability from '../views/doctor/ManageAvailability.vue'
 import PatientHistory from '../views/doctor/PatientHistory.vue'
@@ -27,6 +29,8 @@ const router = createRouter({
     { path: '/admin/departments', name: 'manage-departments', component: ManageDepartments, meta: { requiresAuth: true, role: 'Admin' } },
     { path: '/admin/add-department', name: 'add-department', component: AddDepartment, meta: { requiresAuth: true, role: 'Admin' } },
     { path: '/admin/patients', name: 'manage-patients', component: ManagePatients, meta: { requiresAuth: true, role: 'Admin' } },
+    { path: '/admin/appointments', name: 'admin-appointments', component: AdminAppointments, meta: { requiresAuth: true, role: 'Admin' } },
+    { path: '/admin/patient/:id/history', name: 'admin-patient-history', component: AdminPatientHistory, meta: { requiresAuth: true, role: 'Admin' } },
     { path: '/doctor/dashboard', name: 'doctor-dashboard', component: DoctorDashboard, meta: { requiresAuth: true, role: 'Doctor' } },
     { path: '/doctor/availability', name: 'manage-availability', component: ManageAvailability, meta: { requiresAuth: true, role: 'Doctor' } },
     { path: '/doctor/patient/:id/history', name: 'patient-history', component: PatientHistory, meta: { requiresAuth: true, role: 'Doctor' } },

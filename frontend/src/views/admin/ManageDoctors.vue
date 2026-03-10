@@ -2,9 +2,13 @@
   <div>
     <Navbar />
     <div class="container mt-4">
-      <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>Manage Doctors</h3>
         <router-link to="/admin/add-doctor" class="btn btn-primary"> + Register Doctor</router-link>
+      </div>
+
+      <div class="mb-3">
+        <input v-model="searchQuery" @input="fetchDocs" class="form-control" placeholder="Search by name or department...">
       </div>
 
       <div class="card shadow-sm">
@@ -59,10 +63,11 @@ import api from '../../services/api';
 import { ref, onMounted } from 'vue';
 
 const docs = ref([]);
+const searchQuery = ref('');
 
 const fetchDocs = async () => {
   try {
-    const res = await api.get('/admin/doctor');
+    const res = await api.get(`/admin/doctor?q=${searchQuery.value}`);
     docs.value = res.data;
   } catch (error) {
     console.error("Error fetching doctors:", error);

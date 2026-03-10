@@ -1,7 +1,8 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt
-from models.models import db, User, Doctor, Patient, Appointment, Role, Department
+from models.models import db, User, Doctor, Patient, Appointment, Role, Department, Treatment
+from datetime import date
 
 def is_admin():
     claims = get_jwt()
@@ -58,9 +59,12 @@ class ManageDoctor(Resource):
     @jwt_required()
     def get(self):
         if not is_admin(): return {'message': 'Unauthorized'}, 403
+        q = request.args.get('q', '').lower()
         doctors = Doctor.query.all()
         data = []
         for d in doctors:
+            if q and q not in d.user.full_name.lower() and q not in d.department.department_name.lower():
+                continue
             data.append({
                 'id': d.id, 
                 'full_name': d.user.full_name,
@@ -130,9 +134,12 @@ class ManagePatient(Resource):
     @jwt_required()
     def get(self):
         if not is_admin(): return {'message': 'Unauthorized'}, 403
+        q = request.args.get('q', '').lower()
         patients = Patient.query.all()
         data = []
         for p in patients:
+            if q and q not in p.user.full_name.lower() and q not in str(p.id) and q not in p.user.mobile_no:
+                continue
             data.append({
                 'id': p.id, 
                 'full_name': p.user.full_name,
@@ -168,3 +175,56 @@ class ManagePatient(Resource):
         except Exception as e:
             db.session.rollback()
             return {'message': f'Error deleting patient: {str(e)}'}, 500
+
+class AdminAppointments(Resource):
+    @jwt_required()
+    def get(self):
+        if not is_admin(): return {'message': 'Unauthorized'}, 403
+        status_filter = request.args.get('status', '').lower()
+        today = date.today()
+        appointments = Appointment.query.order_by(Appointment.date.desc(), Appointment.start_time.desc()).all()
+        data = []
+        for a in appointments:
+            if status_filter == 'upcoming' and (a.date < today or a.status != 'Booked'):
+                continue
+            if status_filter == 'past' and a.date >= today:
+                continue
+            if status_filter in ['booked', 'completed', 'cancelled'] and a.status.lower() != status_filter:
+                continue
+            treatment = Treatment.query.filter_by(appointment_id=a.id).first()
+            data.append({
+                'id': a.id,
+                'doctor_name': a.doctor.user.full_name,
+                'patient_name': a.patient.user.full_name,
+                'patient_id': a.patient_id,
+                'date': str(a.date),
+                'start_time': str(a.start_time),
+                'status': a.status,
+                'diagnosis': treatment.diagnosis if treatment else None,
+                'prescription': treatment.prescription if treatment else None,
+                'notes': treatment.notes if treatment else None
+            })
+        return data, 200
+
+class AdminPatientHistory(Resource):
+    @jwt_required()
+    def get(self, patient_id):
+        if not is_admin(): return {'message': 'Unauthorized'}, 403
+        patient = Patient.query.get_or_404(patient_id)
+        treatments = Treatment.query.join(Appointment).filter(
+            Appointment.patient_id == patient_id,
+            Appointment.status == 'Completed'
+        ).all()
+        history = []
+        for t in treatments:
+            history.append({
+                'date': str(t.appointment.date),
+                'doctor': t.appointment.doctor.user.full_name,
+                'diagnosis': t.diagnosis,
+                'prescription': t.prescription,
+                'notes': t.notes
+            })
+        return {
+            'patient_name': patient.user.full_name,
+            'records': history
+        }, 200

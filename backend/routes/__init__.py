@@ -21,7 +21,7 @@ patient_api = Api(patient_bp)
 public_api = Api(public_bp)
 
 from .auth_routes import Register, Login
-from .admin_routes import AdminDashboard, ManageDepartment, ManageDoctor, ManagePatient
+from .admin_routes import AdminDashboard, ManageDepartment, ManageDoctor, ManagePatient, AdminAppointments, AdminPatientHistory
 from .public_routes import DepartmentList
 from .doctor_routes import DoctorDashboard, ManageAvailability, ManageAppointment, AddTreatment, PatientHistory
 from .patient_routes import SearchDoctors, GetDoctorAvailability, BookAppointment, PatientAppointments, CancelAppointment, PatientProfile
@@ -35,6 +35,8 @@ admin_api.add_resource(AdminDashboard, '/dashboard')
 admin_api.add_resource(ManageDoctor, '/doctor', '/doctor/<int:doctor_id>')
 admin_api.add_resource(ManageDepartment, '/department', '/department/<int:department_id>')
 admin_api.add_resource(ManagePatient, '/patient', '/patient/<int:patient_id>')
+admin_api.add_resource(AdminAppointments, '/appointments')
+admin_api.add_resource(AdminPatientHistory, '/patient-history/<int:patient_id>')
 
 doctor_api.add_resource(DoctorDashboard, '/dashboard')
 doctor_api.add_resource(ManageAvailability, '/availability', '/availability/<int:slot_id>')

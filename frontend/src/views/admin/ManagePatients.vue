@@ -3,7 +3,12 @@
     <Navbar />
     <div class="container mt-4">
       <h3>Manage Patients</h3>
-      <div class="card shadow-sm mt-3">
+
+      <div class="mb-3 mt-3">
+        <input v-model="searchQuery" @input="fetchPatients" class="form-control" placeholder="Search by name, ID, or mobile...">
+      </div>
+
+      <div class="card shadow-sm">
         <table class="table table-hover mb-0">
           <thead class="table-success">
             <tr>
@@ -27,6 +32,7 @@
                  </span>
               </td>
               <td>
+                <router-link :to="`/admin/patient/${p.id}/history`" class="btn btn-info btn-sm me-2">History</router-link>
                 <button 
                   v-if="p.flag === 'active'" 
                   @click="toggleFlag(p.id, 'blacklisted')" 
@@ -56,10 +62,11 @@ import api from '../../services/api';
 import { ref, onMounted } from 'vue';
 
 const patients = ref([]);
+const searchQuery = ref('');
 
 const fetchPatients = async () => {
   try {
-    const res = await api.get('/admin/patient'); 
+    const res = await api.get(`/admin/patient?q=${searchQuery.value}`); 
     patients.value = res.data;
   } catch (error) {
     console.error("Error fetching patients:", error);
