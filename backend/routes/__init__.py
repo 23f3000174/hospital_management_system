@@ -1,6 +1,9 @@
 from flask import Blueprint
 from flask_restful import Api
 from flask_cors import CORS
+from flask_caching import Cache
+
+cache = Cache()
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 admin_bp = Blueprint('admin', __name__, url_prefix='/api/admin')

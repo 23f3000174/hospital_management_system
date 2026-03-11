@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_caching import Cache
 from models.models import db, User, Role
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -15,6 +16,9 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hms.db"
     app.config['SECRET_KEY'] = 'phull_sequrity'
     app.config['PERMANENT_SESSION_LIFETIME'] = 86400
+    app.config['CACHE_TYPE'] = 'RedisCache'
+    app.config['CACHE_REDIS_URL'] = 'redis://localhost:6379/2'
+    app.config['CACHE_DEFAULT_TIMEOUT'] = 60
 
     CORS(app, resources={r"/*": {"origins": "*"}}, 
          allow_headers=["Content-Type", "Authorization"],
@@ -23,7 +27,8 @@ def create_app():
     db.init_app(app)
     jwt = JWTManager(app)
 
-    from routes import create_initial_departments, auth_bp, admin_bp, public_bp, doctor_bp, patient_bp
+    from routes import cache, create_initial_departments, auth_bp, admin_bp, public_bp, doctor_bp, patient_bp
+    cache.init_app(app)
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(public_bp)

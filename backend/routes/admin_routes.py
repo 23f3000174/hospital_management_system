@@ -3,6 +3,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt
 from models.models import db, User, Doctor, Patient, Appointment, Role, Department, Treatment
 from datetime import date
+from routes import cache
 
 def is_admin():
     claims = get_jwt()
@@ -12,11 +13,16 @@ class AdminDashboard(Resource):
     @jwt_required()
     def get(self):
         if not is_admin(): return {'message': 'Unauthorized'}, 403
-        return {
+        cached = cache.get('admin_dashboard')
+        if cached:
+            return cached
+        result = {
             'total_doctors': Doctor.query.count(),
             'total_patients': Patient.query.count(),
             'total_appointments': Appointment.query.count()
         }
+        cache.set('admin_dashboard', result, timeout=30)
+        return result
 
 class ManageDepartment(Resource):
     @jwt_required()
@@ -37,6 +43,8 @@ class ManageDepartment(Resource):
         new_dept = Department(department_name=data['department_name'], description=data['description'])
         db.session.add(new_dept)
         db.session.commit()
+        cache.delete('department_list')
+        cache.delete('admin_dashboard')
         return {"message": "New Department Added"}, 201
 
     @jwt_required()
@@ -50,6 +58,8 @@ class ManageDepartment(Resource):
         try:
             db.session.delete(dept)
             db.session.commit()
+            cache.delete('department_list')
+            cache.delete('admin_dashboard')
             return {'message': 'Department deleted'}, 200
         except Exception as e:
             db.session.rollback()
@@ -103,6 +113,7 @@ class ManageDoctor(Resource):
         db.session.add(new_user)
         db.session.add(new_doctor)
         db.session.commit()
+        cache.delete('admin_dashboard')
         return {'message': 'Doctor added successfully'}, 201
 
     @jwt_required()
@@ -125,6 +136,7 @@ class ManageDoctor(Resource):
             db.session.delete(doctor)
             db.session.delete(user)
             db.session.commit()
+            cache.delete('admin_dashboard')
             return {'message': 'Doctor removed successfully'}, 200
         except Exception as e:
             db.session.rollback()
@@ -171,6 +183,7 @@ class ManagePatient(Resource):
             db.session.delete(patient)
             db.session.delete(user)
             db.session.commit()
+            cache.delete('admin_dashboard')
             return {'message': 'Patient removed successfully'}, 200
         except Exception as e:
             db.session.rollback()
