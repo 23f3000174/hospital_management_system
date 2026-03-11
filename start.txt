@@ -1,0 +1,18 @@
+source .env/bin/activate
+python app.py
+
+Celery Worker
+celery -A celery_app worker --loglevel=info
+
+Celery beat
+celery -A celery_app beat --loglevel=info
+
+Daily Reminder
+python -c "from celery_app import daily_reminder; r = daily_reminder.delay(); print(r.get(timeout=30))"
+
+
+Monthly Reminder:
+python -c "from celery_app import monthly_reminder; r = monthly_reminder.delay(); print(r.get(timeout=30))"
+
+MAILHOG:
+http://localhost:8025
