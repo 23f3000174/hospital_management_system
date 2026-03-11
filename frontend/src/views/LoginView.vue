@@ -35,8 +35,8 @@
 
 <script setup>
 import Navbar from '../components/Navbar.vue';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import api from '../services/api';
 
 const email = ref('');
@@ -44,6 +44,12 @@ const password = ref('');
 const errorMessage = ref('');
 const loading = ref(false);
 const router = useRouter();
+const route = useRoute();
+
+onMounted(() => {
+  if (route.query.email) email.value = route.query.email;
+  if (route.query.password) password.value = route.query.password;
+});
 
 const handleLogin = async () => {
   loading.value = true;

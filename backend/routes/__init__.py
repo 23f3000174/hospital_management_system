@@ -77,6 +77,61 @@ def create_initial_departments():
             "name": "General Medicine",
             "desc": "General Medicine deals with the prevention, diagnosis, and non-surgical treatment of adult diseases.",
             "issues": ["Fever", "Flu", "Diabetes management", "Infections"]
+        },
+        {
+            "name": "Pediatrics",
+            "desc": "Provides medical care for infants, children, and adolescents.",
+            "issues": ["Vaccinations", "Growth disorders", "Childhood infections", "Asthma"]
+        },
+        {
+            "name": "Obstetrics and Gynecology",
+            "desc": "Specializes in pregnancy, childbirth, and disorders of the reproductive system.",
+            "issues": ["Pregnancy complications", "Menstrual disorders", "Infertility", "Pelvic pain"]
+        },
+        {
+            "name": "Oncology",
+            "desc": "Focuses on the diagnosis, treatment, and prevention of cancer.",
+            "issues": ["Tumors", "Chemotherapy management", "Radiation therapy", "Leukemia"]
+        },
+        {
+            "name": "Radiology",
+            "desc": "Uses medical imaging to diagnose and treat diseases within the body.",
+            "issues": ["X-ray interpretation", "MRI scans", "CT scans", "Ultrasounds"]
+        },
+        {
+            "name": "General Surgery",
+            "desc": "Focuses on abdominal contents including esophagus, stomach, small intestine, large intestine, liver, pancreas.",
+            "issues": ["Appendicitis", "Hernias", "Gallbladder removal", "Trauma surgery"]
+        },
+        {
+            "name": "Urology",
+            "desc": "Focuses on surgical and medical diseases of the male and female urinary-tract system and the male reproductive organs.",
+            "issues": ["Kidney stones", "Prostate issues", "Urinary tract infections (UTIs)", "Bladder issues"]
+        },
+        {
+            "name": "Dermatology",
+            "desc": "Specializes in conditions involving the skin, hair, and nails.",
+            "issues": ["Acne", "Eczema", "Psoriasis", "Skin cancer screening"]
+        },
+        {
+            "name": "Gastroenterology",
+            "desc": "Focuses on the digestive system and its disorders.",
+            "issues": ["Acid reflux", "Irritable bowel syndrome (IBS)", "Ulcers", "Liver disease"]
+        },
+        {
+            "name": "Psychiatry",
+            "desc": "Specializes in the diagnosis, prevention, and treatment of mental disorders.",
+            "issues": ["Depression", "Anxiety", "Bipolar disorder", "Schizophrenia"]
+        },
+        {
+            "name": "Ophthalmology",
+            "desc": "Deals with the diagnosis and treatment of eye disorders.",
+            "issues": ["Cataracts", "Glaucoma", "Vision loss", "Eye infections"]
+        },
+        {
+            "name": "ENT (Otorhinolaryngology)",
+            "desc": "Specializes in conditions of the ear, nose, and throat.",
+            "issues": ["Hearing loss", "Sinusitis", "Tonsillitis", "Vertigo"]
         }
     ]
     for d in departments_data:

@@ -114,6 +114,10 @@ class ManageDoctor(Resource):
         db.session.add(new_doctor)
         db.session.commit()
         cache.delete('admin_dashboard')
+        
+        from celery_app import send_doctor_welcome_email
+        send_doctor_welcome_email.delay(data['email'], data['password'], data['full_name'])
+        
         return {'message': 'Doctor added successfully'}, 201
 
     @jwt_required()

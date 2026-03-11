@@ -3,3 +3,6 @@ __pycache__
 instance
 backend/.env
 static/
+logs/
+*.log
+celerybeat-schedule

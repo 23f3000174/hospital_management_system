@@ -55,7 +55,7 @@ def create_initial_data():
         admin_role = Role.query.filter_by(name='Admin').first()
         if admin_role:
             admin_user = User(
-                full_name='Admin User',
+                full_name='Admin',
                 email='admin@admin.com',
                 mobile_no='9999999999',
                 flag='active'

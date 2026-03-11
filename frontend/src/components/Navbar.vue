@@ -20,6 +20,9 @@
             <router-link class="nav-link" to="/register">Register</router-link>
           </li>
 
+          <li class="nav-item d-flex align-items-center me-3" v-if="isLoggedIn">
+            <span class="text-light fw-semibold">Hello, {{ userName }}</span>
+          </li>
           <li class="nav-item" v-if="isLoggedIn">
             <router-link class="nav-link" :to="dashboardLink">Dashboard</router-link>
           </li>

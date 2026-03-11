@@ -215,6 +215,38 @@ def export_csv(patient_id, email):
         send_mail(email, "Treatment History Export Ready", body)
     return f"CSV exported for patient {patient_id}"
 
+@celeryApp.task()
+def send_doctor_welcome_email(email, password, name):
+    subject = "Welcome to HMS - Your Doctor Account Details"
+    body = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; background:#f6f9fc; margin:0; padding:20px;">
+        <div style="max-width:600px; margin:0 auto; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+        <div style="background:#2c3e50; color:#ffffff; padding:20px 24px;">
+            <h1 style="margin:0; font-size:20px;">Welcome to HMS!</h1>
+        </div>
+        <div style="padding:24px; color:#333333; line-height:1.6; font-size:15px;">
+            <p>Hello <strong>Dr. {name}</strong>,</p>
+            <p>An administrator has created a Doctor account for you on the Hospital Management System.</p>
+            <p>Here are your login credentials:</p>
+            <div style="background:#f8f9fa; border-left:4px solid #2c3e50; padding:12px; margin:16px 0;">
+                <p style="margin:0 0 8px;"><strong>Email:</strong> {email}</p>
+                <p style="margin:0;"><strong>Password:</strong> {password}</p>
+            </div>
+            <div style="text-align:center; margin:24px 0;">
+                <a href="http://127.0.0.1:5173/login?email={email}&password={password}" style="display:inline-block; background:#2c3e50; color:#ffffff; text-decoration:none; padding:10px 24px; border-radius:6px; font-weight:600;">Access Dashboard</a>
+            </div>
+        </div>
+        <div style="background:#f2f6fb; color:#6b7280; padding:12px 24px; font-size:13px;">
+            Hospital Management System
+        </div>
+        </div>
+    </body>
+    </html>
+    """
+    send_mail(email, subject, body)
+    return f"Welcome email sent to {email}"
+
 from celery.schedules import crontab
 
 celeryApp.conf.beat_schedule = {
