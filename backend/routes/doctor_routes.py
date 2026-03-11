@@ -78,19 +78,32 @@ class ManageAvailability(Resource):
 
         today = date.today()
         generated_count = 0
+        SLOT_DURATION = 30 
         
         try:
-            start_t = datetime.strptime(start_str, '%H:%M').time()
-            end_t = datetime.strptime(end_str, '%H:%M').time()
+            start_t = datetime.strptime(start_str, '%H:%M')
+            end_t = datetime.strptime(end_str, '%H:%M')
 
             for i in range(30):
                 current_date = today + timedelta(days=i)
                 if current_date.weekday() in target_weekdays:
-                    exists = DoctorAvailability.query.filter_by(doctor_id=doctor_id, date=current_date, start_time=start_t).first()
-                    if not exists:
-                        new_slot = DoctorAvailability(doctor_id=doctor_id, date=current_date, start_time=start_t, end_time=end_t)
-                        db.session.add(new_slot)
-                        generated_count += 1
+                    slot_start = start_t
+                    while slot_start + timedelta(minutes=SLOT_DURATION) <= end_t:
+                        slot_end = slot_start + timedelta(minutes=SLOT_DURATION)
+                        s_time = slot_start.time()
+                        e_time = slot_end.time()
+                        
+                        exists = DoctorAvailability.query.filter_by(
+                            doctor_id=doctor_id, date=current_date, start_time=s_time
+                        ).first()
+                        if not exists:
+                            new_slot = DoctorAvailability(
+                                doctor_id=doctor_id, date=current_date,
+                                start_time=s_time, end_time=e_time
+                            )
+                            db.session.add(new_slot)
+                            generated_count += 1
+                        slot_start = slot_end
             
             db.session.commit()
             return {'message': f'Generated {generated_count} slots successfully'}, 201
