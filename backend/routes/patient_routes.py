@@ -164,3 +164,12 @@ class PatientProfile(Resource):
         if 'age' in data: user.patient_profile.age = data['age']
         db.session.commit()
         return {'message': 'Profile Updated'}, 200
+
+class ExportCSV(Resource):
+    @jwt_required()
+    def get(self):
+        if not is_patient(): return {'message': 'Unauthorized'}, 403
+        user = User.query.get(get_jwt_identity())
+        from celery_app import export_csv
+        export_csv.delay(user.patient_profile.id, user.email)
+        return {'message': 'Export started! You will receive an email with the download link.'}, 200
